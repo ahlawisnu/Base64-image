@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Base64 Image Preview</title>
+
+<style>
+
+:root{
+
+--primary:#B71C1C;
+--primary2:#D32F2F;
+--gold:#FFC107;
+--bg:#121212;
+--surface:#1E1E1E;
+--card:#252525;
+--text:#ffffff;
+--radius:18px;
+
+font-family:Segoe UI,Roboto,sans-serif;
+
+}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+
+background:linear-gradient(180deg,#111,#1d1d1d);
+color:var(--text);
+
+}
+
+.container{
+
+max-width:1100px;
+margin:auto;
+padding:24px;
+
+}
+
+.card{
+
+background:var(--card);
+border-radius:var(--radius);
+padding:20px;
+box-shadow:0 8px 25px rgba(0,0,0,.4);
+
+}
+
+h1{
+
+text-align:center;
+color:var(--gold);
+margin-bottom:20px;
+
+}
+
+textarea{
+
+width:100%;
+height:180px;
+padding:16px;
+border:none;
+border-radius:16px;
+background:#111;
+color:white;
+resize:vertical;
+font-size:14px;
+
+}
+
+.preview{
+
+margin-top:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+border:2px dashed #555;
+border-radius:18px;
+padding:20px;
+min-height:300px;
+
+}
+
+.preview img{
+
+max-width:100%;
+max-height:500px;
+border-radius:12px;
+box-shadow:0 8px 25px rgba(0,0,0,.5);
+
+}
+
+.buttons{
+
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+margin-top:20px;
+
+}
+
+button{
+
+flex:1;
+padding:14px;
+border:none;
+border-radius:16px;
+cursor:pointer;
+font-weight:bold;
+transition:.3s;
+
+}
+
+.primary{
+
+background:var(--primary2);
+color:white;
+
+}
+
+.gold{
+
+background:var(--gold);
+color:#222;
+
+}
+
+.gray{
+
+background:#555;
+color:white;
+
+}
+
+button:hover{
+
+transform:translateY(-2px);
+
+}
+
+.info{
+
+margin-top:18px;
+padding:15px;
+background:#181818;
+border-radius:12px;
+
+}
+
+.drop{
+
+margin-top:20px;
+padding:30px;
+border:2px dashed var(--gold);
+border-radius:18px;
+text-align:center;
+
+}
+
+footer{
+
+margin-top:35px;
+padding:25px;
+text-align:center;
+font-size:14px;
+color:#bbb;
+
+}
+
+footer a{
+
+color:var(--gold);
+text-decoration:none;
+
+}
+
+@media(max-width:700px){
+
+.buttons{
+
+flex-direction:column;
+
+}
+
+.preview{
+
+min-height:220px;
+
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>Base64 Image Preview</h1>
+
+<textarea id="base64" placeholder="Paste Base64 Image here..."></textarea>
+
+<div class="buttons">
+
+<button class="primary" onclick="previewImage()">Preview</button>
+
+<button class="gold" onclick="downloadImage()">Download</button>
+
+<button class="gray" onclick="copyBase64()">Copy</button>
+
+<button class="gray" onclick="clearAll()">Clear</button>
+
+</div>
+
+<div class="drop" id="drop">
+
+Drop Image Here<br>
+atau klik untuk memilih gambar
+
+<input type="file"
+id="file"
+accept="image/*"
+hidden>
+
+</div>
+
+<div class="preview">
+
+<img id="img" style="display:none;">
+
+</div>
+
+<div class="info" id="info">
+
+Belum ada gambar.
+
+</div>
+
+</div>
+
+<footer>
+
+GitHub :
+<a href="https://github.com/ahlawisnu" target="_blank">
+@ahlawisnu
+</a>
+
+<br><br>
+
+Credit :
+<a href="https://ahlawisnu.github.io" target="_blank">
+GitHub │ ahlawisnu.github.io
+</a>
+
+</footer>
+
+</div>
+
+<script>
+
+const txt=document.getElementById("base64");
+const img=document.getElementById("img");
+const info=document.getElementById("info");
+
+function previewImage(){
+
+let data=txt.value.trim();
+
+if(!data){
+
+alert("Base64 kosong");
+return;
+
+}
+
+img.src=data;
+
+img.onload=function(){
+
+img.style.display="block";
+
+info.innerHTML=
+`
+<b>Width :</b> ${img.naturalWidth}px<br>
+<b>Height :</b> ${img.naturalHeight}px<br>
+<b>Base64 Length :</b> ${data.length.toLocaleString()} karakter
+`;
+
+}
+
+}
+
+function downloadImage(){
+
+if(!img.src){
+
+alert("Preview dahulu");
+return;
+
+}
+
+let a=document.createElement("a");
+
+a.href=img.src;
+a.download="image.png";
+a.click();
+
+}
+
+function clearAll(){
+
+txt.value="";
+img.style.display="none";
+img.src="";
+info.innerHTML="Belum ada gambar.";
+
+}
+
+function copyBase64(){
+
+navigator.clipboard.writeText(txt.value);
+
+alert("Base64 berhasil disalin");
+
+}
+
+const drop=document.getElementById("drop");
+
+drop.onclick=()=>document.getElementById("file").click();
+
+document.getElementById("file").addEventListener("change",loadFile);
+
+drop.addEventListener("dragover",e=>{
+
+e.preventDefault();
+
+});
+
+drop.addEventListener("drop",e=>{
+
+e.preventDefault();
+
+loadImage(e.dataTransfer.files[0]);
+
+});
+
+function loadFile(e){
+
+loadImage(e.target.files[0]);
+
+}
+
+function loadImage(file){
+
+const reader=new FileReader();
+
+reader.onload=function(ev){
+
+txt.value=ev.target.result;
+
+previewImage();
+
+}
+
+reader.readAsDataURL(file);
+
+}
+
+</script>
+
+</body>
+</html>
