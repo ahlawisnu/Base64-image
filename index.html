@@ -1,382 +1,475 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Base64 Image Preview</title>
-
-<style>
-
-:root{
-
---primary:#B71C1C;
---primary2:#D32F2F;
---gold:#FFC107;
---bg:#121212;
---surface:#1E1E1E;
---card:#252525;
---text:#ffffff;
---radius:18px;
-
-font-family:Segoe UI,Roboto,sans-serif;
-
-}
-
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-
-body{
-
-background:linear-gradient(180deg,#111,#1d1d1d);
-color:var(--text);
-
-}
-
-.container{
-
-max-width:1100px;
-margin:auto;
-padding:24px;
-
-}
-
-.card{
-
-background:var(--card);
-border-radius:var(--radius);
-padding:20px;
-box-shadow:0 8px 25px rgba(0,0,0,.4);
-
-}
-
-h1{
-
-text-align:center;
-color:var(--gold);
-margin-bottom:20px;
-
-}
-
-textarea{
-
-width:100%;
-height:180px;
-padding:16px;
-border:none;
-border-radius:16px;
-background:#111;
-color:white;
-resize:vertical;
-font-size:14px;
-
-}
-
-.preview{
-
-margin-top:20px;
-display:flex;
-justify-content:center;
-align-items:center;
-border:2px dashed #555;
-border-radius:18px;
-padding:20px;
-min-height:300px;
-
-}
-
-.preview img{
-
-max-width:100%;
-max-height:500px;
-border-radius:12px;
-box-shadow:0 8px 25px rgba(0,0,0,.5);
-
-}
-
-.buttons{
-
-display:flex;
-gap:12px;
-flex-wrap:wrap;
-margin-top:20px;
-
-}
-
-button{
-
-flex:1;
-padding:14px;
-border:none;
-border-radius:16px;
-cursor:pointer;
-font-weight:bold;
-transition:.3s;
-
-}
-
-.primary{
-
-background:var(--primary2);
-color:white;
-
-}
-
-.gold{
-
-background:var(--gold);
-color:#222;
-
-}
-
-.gray{
-
-background:#555;
-color:white;
-
-}
-
-button:hover{
-
-transform:translateY(-2px);
-
-}
-
-.info{
-
-margin-top:18px;
-padding:15px;
-background:#181818;
-border-radius:12px;
-
-}
-
-.drop{
-
-margin-top:20px;
-padding:30px;
-border:2px dashed var(--gold);
-border-radius:18px;
-text-align:center;
-
-}
-
-footer{
-
-margin-top:35px;
-padding:25px;
-text-align:center;
-font-size:14px;
-color:#bbb;
-
-}
-
-footer a{
-
-color:var(--gold);
-text-decoration:none;
-
-}
-
-@media(max-width:700px){
-
-.buttons{
-
-flex-direction:column;
-
-}
-
-.preview{
-
-min-height:220px;
-
-}
-
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Converter | Ahlawisnu</title>
+    
+    <!-- Material Icons & Fonts -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- MATERIAL YOU + IRON MAN THEME VARIABLES --- */
+        :root {
+            /* Iron Man Palette: Gold (#D4AF37), Red (#B71C1C), Dark Tech (#121212) */
+            --md-sys-color-primary: #D4AF37; 
+            --md-sys-color-on-primary: #121212;
+            --md-sys-color-secondary: #B71C1C;
+            --md-sys-color-background: #FDF8E9;
+            --md-sys-color-surface: #FFFFFF;
+            --md-sys-color-surface-variant: #F5EDD6;
+            --md-sys-color-on-surface: #1C1B1F;
+            --md-sys-color-outline: #79747E;
+            
+            --md-sys-elevation-1: 0px 1px 3px rgba(0,0,0,0.12);
+            --md-sys-elevation-2: 0px 4px 8px rgba(0,0,0,0.15);
+            --border-radius-lg: 24px;
+            --border-radius-md: 16px;
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="dark"] {
+            --md-sys-color-primary: #FFD54F;
+            --md-sys-color-on-primary: #212121;
+            --md-sys-color-secondary: #FF5252;
+            --md-sys-color-background: #121212;
+            --md-sys-color-surface: #1E1E1E;
+            --md-sys-color-surface-variant: #2C2C2C;
+            --md-sys-color-on-surface: #E6E1E5;
+            --md-sys-color-outline: #938F99;
+            --md-sys-elevation-1: 0px 1px 3px rgba(0,0,0,0.4);
+            --md-sys-elevation-2: 0px 4px 8px rgba(0,0,0,0.5);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; transition: background-color var(--transition-speed), color var(--transition-speed); }
+        
+        body {
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-surface);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- HEADER & ARC REACTOR ANIMATION --- */
+        header {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand { display: flex; align-items: center; gap: 1rem; }
+        
+        /* Arc Reactor CSS Animation */
+        .arc-reactor {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #E0F7FA 10%, transparent 11%),
+                        conic-gradient(from 0deg, transparent 0deg, var(--md-sys-color-primary) 60deg, transparent 120deg, var(--md-sys-color-primary) 180deg, transparent 240deg, var(--md-sys-color-primary) 300deg, transparent 360deg);
+            border: 3px solid var(--md-sys-color-primary);
+            box-shadow: 0 0 15px var(--md-sys-color-primary), inset 0 0 10px var(--md-sys-color-primary);
+            animation: spin 4s linear infinite, pulse 2s ease-in-out infinite alternate;
+            position: relative;
+        }
+        .arc-reactor::after {
+            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 20px; height: 20px; border-radius: 50%;
+            background: #E0F7FA; box-shadow: 0 0 20px #E0F7FA;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { from { opacity: 0.7; box-shadow: 0 0 10px var(--md-sys-color-primary); } to { opacity: 1; box-shadow: 0 0 25px var(--md-sys-color-primary); } }
+
+        h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        .subtitle { font-size: 0.85rem; opacity: 0.7; }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none; border: none; cursor: pointer; color: var(--md-sys-color-on-surface);
+            padding: 0.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
+        .theme-toggle:hover { background-color: var(--md-sys-color-surface-variant); }
+
+        /* --- MAIN CONTAINER & TABS --- */
+        main { width: 100%; max-width: 800px; padding: 0 1rem; flex: 1; }
+
+        .tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--md-sys-color-outline); }
+        .tab-btn {
+            background: none; border: none; padding: 1rem 1.5rem; cursor: pointer;
+            font-size: 1rem; font-weight: 500; color: var(--md-sys-color-outline);
+            position: relative; transition: all 0.2s;
+        }
+        .tab-btn.active { color: var(--md-sys-color-primary); }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px;
+            background-color: var(--md-sys-color-primary); border-radius: 3px 3px 0 0;
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CARDS & INPUTS --- */
+        .card {
+            background-color: var(--md-sys-color-surface);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            box-shadow: var(--md-sys-elevation-1);
+            margin-bottom: 1.5rem;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--md-sys-color-outline);
+            border-radius: var(--border-radius-md);
+            padding: 3rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--md-sys-color-outline);
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--md-sys-color-primary);
+            background-color: var(--md-sys-color-surface-variant);
+            color: var(--md-sys-color-primary);
+        }
+        .drop-zone i { font-size: 3rem; margin-bottom: 1rem; display: block; }
+
+        input[type="file"] { display: none; }
+        
+        textarea, input[type="text"] {
+            width: 100%; padding: 1rem; border-radius: var(--border-radius-md);
+            border: 1px solid var(--md-sys-color-outline);
+            background-color: var(--md-sys-color-surface-variant);
+            color: var(--md-sys-color-on-surface);
+            font-family: monospace; resize: vertical; min-height: 120px;
+            outline: none; transition: border 0.2s;
+        }
+        textarea:focus, input[type="text"]:focus { border-color: var(--md-sys-color-primary); }
+
+        /* --- BUTTONS --- */
+        .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.75rem 1.5rem; border-radius: 100px;
+            font-weight: 500; cursor: pointer; border: none;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+        .btn:active { transform: scale(0.96); }
+        
+        .btn-primary { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+        .btn-secondary { background-color: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface); }
+        .btn-icon { padding: 0.75rem; border-radius: 50%; }
+
+        /* --- PREVIEW AREA --- */
+        .preview-container {
+            margin-top: 1.5rem; border-radius: var(--border-radius-md);
+            overflow: hidden; background-color: var(--md-sys-color-surface-variant);
+            display: flex; justify-content: center; align-items: center; min-height: 200px;
+        }
+        .preview-container img { max-width: 100%; max-height: 400px; object-fit: contain; }
+        
+        .meta-info {
+            margin-top: 1rem; padding: 1rem; background: var(--md-sys-color-surface-variant);
+            border-radius: var(--border-radius-md); font-size: 0.9rem; word-break: break-all;
+        }
+        .meta-label { font-weight: 700; color: var(--md-sys-color-primary); margin-right: 0.5rem; }
+
+        /* --- FOOTER --- */
+        footer {
+            width: 100%; padding: 2rem 1rem; text-align: center;
+            border-top: 1px solid var(--md-sys-color-outline); margin-top: auto;
+            background-color: var(--md-sys-color-surface);
+        }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; }
+        .footer-links a {
+            color: var(--md-sys-color-on-surface); text-decoration: none;
+            display: flex; align-items: center; gap: 0.5rem; font-weight: 500;
+        }
+        .footer-links a:hover { color: var(--md-sys-color-primary); }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.2rem; }
+            .card { padding: 1.5rem; }
+            .tabs { gap: 0; }
+            .tab-btn { padding: 0.8rem 1rem; font-size: 0.9rem; flex: 1; text-align: center; }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
-
-<div class="card">
-
-<h1>Base64 Image Preview</h1>
-
-<textarea id="base64" placeholder="Paste Base64 Image here...">data:image/webp;base64,</textarea>
-
-<div class="buttons">
-
-<button class="primary" onclick="previewImage()">Preview</button>
-
-<button class="gold" onclick="downloadImage()">Download</button>
-
-<button class="gray" onclick="copyBase64()">Copy</button>
-
-<button class="gray" onclick="clearAll()">Clear</button>
-
-</div>
-
-<div class="drop" id="drop">
-
-Drop Image Here<br>
-atau klik untuk memilih gambar
-
-<input type="file"
-id="file"
-accept="image/*"
-hidden>
-
-</div>
-
-<div class="preview">
-
-<img id="img" style="display:none;">
-
-</div>
-
-<div class="info" id="info">
-
-Belum ada gambar.
-
-</div>
-
-</div>
-
-<footer>
-
-GitHub :
-<a href="https://github.com/ahlawisnu" target="_blank">
-@ahlawisnu
-</a>
-
-<br><br>
-
-Credit :
-<a href="https://ahlawisnu.github.io" target="_blank">
-GitHub │ ahlawisnu.github.io
-</a>
-
-</footer>
-
-</div>
-
-<script>
-
-const txt=document.getElementById("base64");
-const img=document.getElementById("img");
-const info=document.getElementById("info");
-
-function previewImage(){
-
-let data=txt.value.trim();
-
-if(!data){
-
-alert("Base64 kosong");
-return;
-
-}
-
-img.src=data;
-
-img.onload=function(){
-
-img.style.display="block";
-
-info.innerHTML=
-`
-<b>Width :</b> ${img.naturalWidth}px<br>
-<b>Height :</b> ${img.naturalHeight}px<br>
-<b>Base64 Length :</b> ${data.length.toLocaleString()} karakter
-`;
-
-}
-
-}
-
-function downloadImage(){
-
-if(!img.src){
-
-alert("Preview dahulu");
-return;
-
-}
-
-let a=document.createElement("a");
-
-a.href=img.src;
-a.download="image.png";
-a.click();
-
-}
-
-function clearAll(){
-
-txt.value="";
-img.style.display="none";
-img.src="";
-info.innerHTML="Belum ada gambar.";
-
-}
-
-function copyBase64(){
-
-navigator.clipboard.writeText(txt.value);
-
-alert("Base64 berhasil disalin");
-
-}
-
-const drop=document.getElementById("drop");
-
-drop.onclick=()=>document.getElementById("file").click();
-
-document.getElementById("file").addEventListener("change",loadFile);
-
-drop.addEventListener("dragover",e=>{
-
-e.preventDefault();
-
-});
-
-drop.addEventListener("drop",e=>{
-
-e.preventDefault();
-
-loadImage(e.dataTransfer.files[0]);
-
-});
-
-function loadFile(e){
-
-loadImage(e.target.files[0]);
-
-}
-
-function loadImage(file){
-
-const reader=new FileReader();
-
-reader.onload=function(ev){
-
-txt.value=ev.target.result;
-
-previewImage();
-
-}
-
-reader.readAsDataURL(file);
-
-}
-
-</script>
-
+    <header>
+        <div class="brand">
+            <div class="arc-reactor"></div>
+            <div>
+                <h1>J.A.R.V.I.S. Converter</h1>
+                <span class="subtitle">Image to Base64 & Reverse Protocol</span>
+            </div>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <i class="material-icons-round" id="theme-icon">light_mode</i>
+        </button>
+    </header>
+
+    <main>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('img-to-b64')">
+                <i class="material-icons-round" style="vertical-align: middle; margin-right: 4px;">image</i> Img → Base64
+            </button>
+            <button class="tab-btn" onclick="switchTab('b64-to-img')">
+                <i class="material-icons-round" style="vertical-align: middle; margin-right: 4px;">code</i> Base64 → Img
+            </button>
+        </div>
+
+        <!-- TAB 1: IMAGE TO BASE64 -->
+        <div id="img-to-b64" class="tab-content active">
+            <div class="card">
+                <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                    <i class="material-icons-round">cloud_upload</i>
+                    <p><strong>Klik atau Drag & Drop</strong> gambar di sini</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">Support JPG, PNG, WEBP, GIF</p>
+                </div>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+
+            <div class="card" id="resultCard" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h3>Data URI Output</h3>
+                    <div class="btn-group" style="margin:0;">
+                        <button class="btn btn-secondary btn-icon" onclick="copyToClipboard('b64Output')" title="Copy Data URI">
+                            <i class="material-icons-round">content_copy</i>
+                        </button>
+                        <button class="btn btn-secondary btn-icon" onclick="downloadAsHtml()" title="Download HTML Code">
+                            <i class="material-icons-round">download</i>
+                        </button>
+                    </div>
+                </div>
+                
+                <textarea id="b64Output" readonly></textarea>
+                
+                <div class="meta-info">
+                    <span class="meta-label">Format:</span> <span id="metaFormat">-</span> | 
+                    <span class="meta-label">Size:</span> <span id="metaSize">-</span> | 
+                    <span class="meta-label">Dimensions:</span> <span id="metaDim">-</span>
+                </div>
+
+                <div class="preview-container">
+                    <img id="previewImg" src="" alt="Preview">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: BASE64 TO IMAGE -->
+        <div id="b64-to-img" class="tab-content">
+            <div class="card">
+                <label style="font-weight:500; margin-bottom:0.5rem; display:block;">Paste Base64 / Data URI:</label>
+                <textarea id="b64Input" placeholder="data:image/png;base64,iVBORw0KGgo..."></textarea>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="convertB64ToImg()">
+                        <i class="material-icons-round">visibility</i> Generate Preview
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearB64Input()">
+                        <i class="material-icons-round">clear</i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <div class="card" id="reverseResultCard" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h3>Decoded Image</h3>
+                    <button class="btn btn-primary" onclick="downloadDecodedImg()">
+                        <i class="material-icons-round">save_alt</i> Download Image
+                    </button>
+                </div>
+                <div class="preview-container">
+                    <img id="decodedImg" src="" alt="Decoded Preview">
+                </div>
+                <div class="meta-info">
+                    <span class="meta-label">Detected Format:</span> <span id="revMetaFormat">-</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 J.A.R.V.I.S. Systems. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="https://github.com/ahlawisnu" target="_blank">
+                <i class="material-icons-round">code</i> GitHub Repo
+            </a>
+            <a href="https://ahlawisnu.github.io" target="_blank">
+                <i class="material-icons-round">public</i> Portfolio Page
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // --- THEME MANAGEMENT ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                icon.textContent = 'dark_mode';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.textContent = 'light_mode';
+            }
+        }
+
+        // --- TAB SWITCHING ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // --- UTILITIES ---
+        async function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).value;
+            try {
+                await navigator.clipboard.writeText(text);
+                alert('Data URI berhasil disalin ke clipboard!');
+            } catch (err) {
+                console.error('Gagal menyalin:', err);
+                // Fallback untuk browser lama
+                document.getElementById(elementId).select();
+                document.execCommand('copy');
+                alert('Data URI berhasil disalin (fallback)!');
+            }
+        }
+
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+        }
+
+        // --- IMG TO BASE64 LOGIC ---
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        // Drag & Drop Events
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault(); e.stopPropagation();
+                dropZone.classList.add('dragover');
+            }, false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault(); e.stopPropagation();
+                dropZone.classList.remove('dragover');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length) handleFile(files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Harap unggah file gambar yang valid.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataUri = e.target.result;
+                
+                // Update UI
+                document.getElementById('resultCard').style.display = 'block';
+                document.getElementById('b64Output').value = dataUri;
+                document.getElementById('previewImg').src = dataUri;
+                
+                // Meta Info
+                document.getElementById('metaFormat').textContent = file.type.split('/')[1].toUpperCase();
+                document.getElementById('metaSize').textContent = formatBytes(file.size);
+                
+                // Get Dimensions asynchronously
+                const img = new Image();
+                img.onload = () => {
+                    document.getElementById('metaDim').textContent = `${img.width} x ${img.height} px`;
+                };
+                img.src = dataUri;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function downloadAsHtml() {
+            const dataUri = document.getElementById('b64Output').value;
+            if(!dataUri) return;
+            
+            const htmlContent = `<!DOCTYPE html>\n<html>\n<body>\n<img src="${dataUri}" alt="Base64 Image">\n</body>\n</html>`;
+            const blob = new Blob([htmlContent], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'base64-image.html';
+            a.click(); URL.revokeObjectURL(url);
+        }
+
+        // --- BASE64 TO IMAGE LOGIC ---
+        function convertB64ToImg() {
+            let input = document.getElementById('b64Input').value.trim();
+            if (!input) { alert('Silakan paste kode Base64 terlebih dahulu.'); return; }
+
+            // Auto-fix jika user hanya paste raw base64 tanpa prefix
+            if (!input.startsWith('data:')) {
+                // Deteksi format sederhana berdasarkan header base64 (opsional, default ke png)
+                input = 'data:image/png;base64,' + input;
+            }
+
+            const img = document.getElementById('decodedImg');
+            img.onload = () => {
+                document.getElementById('reverseResultCard').style.display = 'block';
+                
+                // Deteksi format dari MIME type
+                const mimeMatch = input.match(/^data:(image\/\w+);base64,/);
+                document.getElementById('revMetaFormat').textContent = mimeMatch ? mimeMatch[1] : 'Unknown / Raw Base64';
+            };
+            img.onerror = () => {
+                alert('Gagal memuat gambar. Pastikan format Base64/Data URI valid.');
+                document.getElementById('reverseResultCard').style.display = 'none';
+            };
+            
+            img.src = input;
+        }
+
+        function clearB64Input() {
+            document.getElementById('b64Input').value = '';
+            document.getElementById('reverseResultCard').style.display = 'none';
+        }
+
+        function downloadDecodedImg() {
+            const src = document.getElementById('decodedImg').src;
+            if(src === window.location.href || !src) return;
+            
+            const a = document.createElement('a');
+            a.href = src;
+            // Ekstrak ekstensi dari MIME type jika ada
+            const mimeMatch = src.match(/^data:(image\/(\w+));base64,/);
+            const ext = mimeMatch ? mimeMatch[2] : 'png';
+            a.download = `decoded-image.${ext}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
 </body>
 </html>
